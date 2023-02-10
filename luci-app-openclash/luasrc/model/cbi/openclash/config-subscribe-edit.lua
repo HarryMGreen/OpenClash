@@ -57,32 +57,6 @@ function o.validate(self, value)
 	return value
 end
 
-local sub_path = "/tmp/dler_sub"
-local info, token, get_sub, sub_info
-local token = uci:get("openclash", "config", "dler_token")
-if token then
-	get_sub = string.format("curl -sL -H 'Content-Type: application/json' --connect-timeout 2 -d '{\"access_token\":\"%s\"}' -X POST https://dler.cloud/api/v1/managed/clash -o %s", token, sub_path)
-	if not nixio.fs.access(sub_path) then
-		luci.sys.exec(get_sub)
-	else
-		if fs.readfile(sub_path) == "" or not fs.readfile(sub_path) then
-			luci.sys.exec(get_sub)
-		end
-	end
-	sub_info = fs.readfile(sub_path)
-	if sub_info then
-		sub_info = json.parse(sub_info)
-	end
-	if sub_info and sub_info.ret == 200 then
-		o:value(sub_info.smart)
-		o:value(sub_info.ss)
-		o:value(sub_info.vmess)
-		o:value(sub_info.trojan)
-	else
-		fs.unlink(sub_path)
-	end
-end
-	
 ---- subconverter
 o = s:option(Flag, "sub_convert", translate("Subscribe Convert Online"))
 o.description = translate("Convert Subscribe Online With Template, Mix Proxies and Keep Settings options Will Not Effect")
@@ -93,12 +67,12 @@ o = s:option(Value, "convert_address", translate("Convert Address"))
 o.rmempty     = true
 o.description = font_red..bold_on..translate("Note: There is A Risk of Privacy Leakage in Online Convert")..bold_off..font_off
 o:depends("sub_convert", "1")
-o:value("https://api.dler.io/sub", translate("api.dler.io")..translate("(Default)"))
-o:value("https://subconverter.herokuapp.com/sub", translate("subconverter.herokuapp.com")..translate("(Default)"))
-o:value("https://v.id9.cc/sub", translate("v.id9.cc")..translate("(Support Vless By Pinyun)"))
-o:value("https://sub.id9.cc/sub", translate("sub.id9.cc"))
-o:value("https://api.wcc.best/sub", translate("api.wcc.best"))
-o.default = "https://api.dler.io/sub"
+o:value("", translate("api.dler.io")..translate("(Default)"))
+o:value("", translate("subconverter.herokuapp.com")..translate("(Default)"))
+o:value("", translate("v.id9.cc")..translate("(Support Vless By Pinyun)"))
+o:value("", translate("sub.id9.cc"))
+o:value("", translate("api.wcc.best"))
+o.default = ""
 
 ---- Template
 o = s:option(ListValue, "template", translate("Template Name"))

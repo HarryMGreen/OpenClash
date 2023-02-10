@@ -109,18 +109,7 @@ yml_gen_rule_provider_file()
    RULE_PROVIDER_FILE_BEHAVIOR=$(grep ",$RULE_PROVIDER_FILE_NAME$" /usr/share/openclash/res/rule_providers.list |awk -F ',' '{print $3}' 2>/dev/null)
    RULE_PROVIDER_FILE_PATH="/etc/openclash/rule_provider/$RULE_PROVIDER_FILE_NAME"
    RULE_PROVIDER_FILE_URL_PATH="$(grep ",$RULE_PROVIDER_FILE_NAME$" /usr/share/openclash/res/rule_providers.list |awk -F ',' '{print $4$5}' 2>/dev/null)"
-   if [ "$github_address_mod" -eq 0 ]; then
-      RULE_PROVIDER_FILE_URL="https://raw.githubusercontent.com/${RULE_PROVIDER_FILE_URL_PATH}"
-   else
-      if [ "$github_address_mod" == "https://cdn.jsdelivr.net/" ] || [ "$github_address_mod" == "https://fastly.jsdelivr.net/" ] || [ "$github_address_mod" == "https://testingcf.jsdelivr.net/" ]; then
-         RULE_PROVIDER_FILE_URL="https://cdn.jsdelivr.net/gh/"$(echo "$RULE_PROVIDER_FILE_URL_PATH" |awk -F '/master' '{print $1}' 2>/dev/null)"@master"$(echo "$RULE_PROVIDER_FILE_URL_PATH" |awk -F 'master' '{print $2}')""
-      elif [ "$github_address_mod" == "https://raw.fastgit.org/" ]; then
-         RULE_PROVIDER_FILE_URL="https://raw.fastgit.org/"$(echo "$RULE_PROVIDER_FILE_URL_PATH" |awk -F '/master' '{print $1}' 2>/dev/null)"/master"$(echo "$RULE_PROVIDER_FILE_URL_PATH" |awk -F 'master' '{print $2}')""
-      else
-         RULE_PROVIDER_FILE_URL="${github_address_mod}https://raw.githubusercontent.com/${RULE_PROVIDER_FILE_URL_PATH}"
-      fi
-      
-   fi
+   RULE_PROVIDER_FILE_URL="https://raw.githubusercontent.com/${RULE_PROVIDER_FILE_URL_PATH}"
    if [ -n "$(grep "$RULE_PROVIDER_FILE_URL" $RULE_PROVIDER_FILE 2>/dev/null)" ]; then
       return
    fi
@@ -788,22 +777,6 @@ yml_other_set()
             if x['path'] and not x['path'].include? p and not x['path'].include? 'game_rules' then
                v=File.basename(x['path']);
                x['path']='./'+p+'/'+v;
-            end;
-            #CDN Replace
-            if '$github_address_mod' != '0' then
-               if '$github_address_mod' == 'https://cdn.jsdelivr.net/' or '$github_address_mod' == 'https://fastly.jsdelivr.net/' or '$github_address_mod' == 'https://testingcf.jsdelivr.net/'then
-                  if x['url'] and x['url'] =~ /^https:\/\/raw.githubusercontent.com/ then
-                     x['url'] = '$github_address_mod' + x['url'].split('/')[3] + '/' + x['url'].split('/')[4] + '@' + x['url'].split(x['url'].split('/')[2] + '/' + x['url'].split('/')[3] + '/' + x['url'].split('/')[4] + '/')[1];
-                  end;
-               elsif '$github_address_mod' == 'https://raw.fastgit.org/' then
-                  if x['url'] and x['url'] =~ /^https:\/\/raw.githubusercontent.com/ then
-                     x['url'] = 'https://raw.fastgit.org/' + x['url'].split('/')[3] + '/' + x['url'].split('/')[4] + '/' + x['url'].split(x['url'].split('/')[2] + '/' + x['url'].split('/')[3] + '/' + x['url'].split('/')[4] + '/')[1];
-                  end;
-               else
-                  if x['url'] and x['url'] =~ /^https:\/\/(raw.|gist.)(githubusercontent.com|github.com)/ then
-                     x['url'] = '$github_address_mod' + x['url'];
-                  end;
-               end;
             end;
             };
          end;
