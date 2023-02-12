@@ -48,11 +48,6 @@ function index()
 	entry({"admin", "services", "openclash", "one_key_update_check"}, call("action_one_key_update_check"))
 	entry({"admin", "services", "openclash", "switch_mode"}, call("action_switch_mode"))
 	entry({"admin", "services", "openclash", "op_mode"}, call("action_op_mode"))
-	entry({"admin", "services", "openclash", "dler_info"}, call("action_dler_info"))
-	entry({"admin", "services", "openclash", "dler_checkin"}, call("action_dler_checkin"))
-	entry({"admin", "services", "openclash", "dler_logout"}, call("action_dler_logout"))
-	entry({"admin", "services", "openclash", "dler_login"}, call("action_dler_login"))
-	entry({"admin", "services", "openclash", "dler_login_info_save"}, call("action_dler_login_info_save"))
 	entry({"admin", "services", "openclash", "sub_info_get"}, call("sub_info_get"))
 	entry({"admin", "services", "openclash", "config_name"}, call("action_config_name"))
 	entry({"admin", "services", "openclash", "switch_config"}, call("action_switch_config"))
@@ -384,38 +379,6 @@ function action_one_key_update()
   return luci.sys.call("bash /usr/share/openclash/openclash_update.sh 'one_key_update' >/dev/null 2>&1 &")
 end
 
-local function dler_login_info_save()
-	uci:set("openclash", "config", "dler_email", luci.http.formvalue("email"))
-	uci:set("openclash", "config", "dler_passwd", luci.http.formvalue("passwd"))
-	uci:set("openclash", "config", "dler_checkin", luci.http.formvalue("checkin"))
-	uci:set("openclash", "config", "dler_checkin_interval", luci.http.formvalue("interval"))
-	if tonumber(luci.http.formvalue("multiple")) > 50 then
-		uci:set("openclash", "config", "dler_checkin_multiple", "50")
-	elseif tonumber(luci.http.formvalue("multiple")) < 1 or not tonumber(luci.http.formvalue("multiple")) then
-		uci:set("openclash", "config", "dler_checkin_multiple", "1")
-	else
-		uci:set("openclash", "config", "dler_checkin_multiple", luci.http.formvalue("multiple"))
-	end
-	uci:commit("openclash")
-	return "success"
-end
-
-local function dler_login()
-	return "login failed"
-end
-
-local function dler_logout()
-	return "logout faild"
-end
-
-local function dler_info()
-	return "error"
-end
-
-local function dler_checkin()
-	return "error"
-end
-
 local function config_name()
 	local e,a={}
 	for t,o in ipairs(fs.glob("/etc/openclash/config/*"))do
@@ -728,41 +691,6 @@ function action_save_corever_branch()
 	luci.http.prepare_content("application/json")
 	luci.http.write_json({
 		save_corever_branch = save_corever_branch();
-	})
-end
-
-function action_dler_login_info_save()
-	luci.http.prepare_content("application/json")
-	luci.http.write_json({
-		dler_login_info_save = dler_login_info_save();
-	})
-end
-
-function action_dler_info()
-	luci.http.prepare_content("application/json")
-	luci.http.write_json({
-		dler_info = dler_info();
-	})
-end
-
-function action_dler_checkin()
-	luci.http.prepare_content("application/json")
-	luci.http.write_json({
-		dler_checkin = dler_checkin();
-	})
-end
-
-function action_dler_logout()
-	luci.http.prepare_content("application/json")
-	luci.http.write_json({
-		dler_logout = dler_logout();
-	})
-end
-
-function action_dler_login()
-	luci.http.prepare_content("application/json")
-	luci.http.write_json({
-		dler_login = dler_login();
 	})
 end
 

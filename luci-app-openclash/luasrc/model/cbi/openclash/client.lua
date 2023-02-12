@@ -133,14 +133,3 @@ d.title = translate("Credits")
 d.reset = false
 d.submit = false
 d:section(SimpleSection).template  = "openclash/developer"
-
-dler = SimpleForm("openclash")
-dler.reset = false
-dler.submit = false
-dler:section(SimpleSection).template  = "openclash/dlercloud"
-
-if uci:get("openclash", "config", "dler_token") then
-	return m, dler, form, s, ap, d
-else
-	return m, form, s, ap, d
-end
