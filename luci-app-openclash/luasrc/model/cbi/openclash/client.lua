@@ -133,3 +133,5 @@ d.title = translate("Credits")
 d.reset = false
 d.submit = false
 d:section(SimpleSection).template  = "openclash/developer"
+
+return m, form, s, ap, d
