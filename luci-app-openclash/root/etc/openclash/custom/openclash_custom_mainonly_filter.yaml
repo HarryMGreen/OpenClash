@@ -1,0 +1,10 @@
+# If requests' source ip addresses are in the specified subnets below,
+# or their domain matches the specified domains, they will use main `nameservers` only.
+#
+# This is a way to decrease requests' response time.
+
+mainonly-filter:
+  ipcidr:
+    - 255.255.255.255/32
+  domain:
+    - "+.baidu.com"

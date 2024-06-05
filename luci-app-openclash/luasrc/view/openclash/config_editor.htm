@@ -193,6 +193,7 @@ if (myEditor_use && myEditor_def) {
 };
 
 var myEditor_hosts = document.getElementById("cbid.openclash.config.custom_hosts");
+var myEditor_main_fil = document.getElementById("cbid.openclash.config.custom_mainonly_fil");
 var myEditor_fall_fil = document.getElementById("cbid.openclash.config.custom_fallback_fil");
 var myEditor_name_pol = document.getElementById("cbid.openclash.config.custom_domain_dns_core");
 var myEditor_name_cus_r1 = document.getElementById("cbid.openclash.config.custom_rules_2");
@@ -210,6 +211,10 @@ if (myEditor_hosts) {
 
 if (myEditor_edit_file) {
 	editor(myEditor_edit_file, 'false', "auto", '700px');
+};
+
+if (myEditor_main_fil) {
+	editor(myEditor_main_fil, 'false');
 };
 
 if (myEditor_fall_fil) {

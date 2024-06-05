@@ -2158,6 +2158,15 @@ msgstr "注意: 如遇到配置丢失或者需要还原默认配置，请尝试�
 msgid "Take Effect If Fallback DNS Setted, Prevent DNS Pollution"
 msgstr "只有在配置文件设置了 Fallback 组的DNS时才会生效，正确设置可以有效防止 DNS 污染"
 
+msgid "Custom MainOnly-Filter"
+msgstr "自定义 MainOnly-Filter"
+
+msgid "Requests match these rules will only use main nameserver"
+msgstr "满足Main-Only的请求只会通过主DNS服务器解析"
+
+msgid "Error: Unable To Parse Custom MainOnly-Filter File, Ignore..."
+msgstr "错误：读取自定义的 MainOnly-Filter 设置失败，跳过此项修改..."
+
 msgid "Custom Fallback-Filter"
 msgstr "自定义 Fallback-Filter"
 

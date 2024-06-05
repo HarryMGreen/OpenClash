@@ -11,6 +11,7 @@ enable_custom_dns=$(uci -q get openclash.config.enable_custom_dns)
 append_wan_dns=$(uci -q get openclash.config.append_wan_dns || echo 1)
 ipv6_dns=$(uci -q get openclash.config.ipv6_dns || echo 0)
 tolerance=$(uci -q get openclash.config.tolerance || echo 0)
+custom_mainonly_filter=$(uci -q get openclash.config.custom_mainonly_filter || echo 0)
 custom_fallback_filter=$(uci -q get openclash.config.custom_fallback_filter || echo 0)
 enable_meta_core=$(uci -q get openclash.config.enable_meta_core || echo 0)
 china_ip_route=$(uci -q get openclash.config.china_ip_route || echo 0)
@@ -633,6 +634,19 @@ Thread.new{
          Value_1 = YAML.load_file('/tmp/yaml_config.proxynamedns.yaml');
          Value_1['proxy-server-nameserver'] = Value_1['proxy-server-nameserver'].uniq;
          Value['dns']['proxy-server-nameserver'] = Value_1['proxy-server-nameserver'];
+      end;
+   end;
+}.join;
+end;
+
+#mainonly-filter
+begin
+Thread.new{
+   if '$custom_mainonly_filter' == '1' then
+      if not YAML.load_file('/etc/openclash/custom/openclash_custom_mainonly_filter.yaml') then
+         puts '${LOGTIME} Error: Unable To Parse Custom MainOnly-Filter File, Ignore...';
+      else
+         Value['dns']['mainonly-filter'] = YAML.load_file('/etc/openclash/custom/openclash_custom_mainonly_filter.yaml')['mainonly-filter'];
       end;
    end;
 }.join;

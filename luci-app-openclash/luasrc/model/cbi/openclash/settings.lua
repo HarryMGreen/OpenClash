@@ -280,6 +280,29 @@ o.description = translate("Recommended Enabled For Avoiding Some Connection Erro
 o.default = 0
 o:depends("enable_redirect_dns", "1")
 
+o = s:taboption("dns", Flag, "custom_mainonly_filter", translate("Custom MainOnly-Filter"))
+o.description = translate("Requests match these rules will only use main nameserver")
+o.default = 0
+
+custom_mainonly_filter = s:taboption("dns", Value, "custom_mainlonly_fil")
+custom_mainonly_filter.template = "cbi/tvalue"
+custom_mainonly_filter.rows = 20
+custom_mainonly_filter.wrap = "off"
+custom_mainonly_filter:depends("custom_mainonly_filter", "1")
+
+function custom_mainonly_filter.cfgvalue(self, section)
+	return NXFS.readfile("/etc/openclash/custom/openclash_custom_mainonly_filter.yaml") or ""
+end
+function custom_mainonly_filter.write(self, section, value)
+	if value then
+		value = value:gsub("\r\n?", "\n")
+		local old_value = NXFS.readfile("/etc/openclash/custom/openclash_custom_mainonly_filter.yaml")
+	  if value ~= old_value then
+			NXFS.writefile("/etc/openclash/custom/openclash_custom_mainonly_filter.yaml", value)
+		end
+	end
+end
+
 o = s:taboption("dns", Flag, "custom_fallback_filter", translate("Custom Fallback-Filter"))
 o.description = translate("Take Effect If Fallback DNS Setted, Prevent DNS Pollution")
 o.default = 0
