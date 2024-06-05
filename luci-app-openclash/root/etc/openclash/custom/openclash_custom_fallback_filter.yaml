@@ -38,3 +38,5 @@ fallback-filter:
     - "+.googlevideo.com"
     - "+.msftconnecttest.com"
     - "+.msftncsi.com"
+  geosite:
+    - gfw

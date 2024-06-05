@@ -8,3 +8,5 @@ mainonly-filter:
     - 255.255.255.255/32
   domain:
     - "+.baidu.com"
+  geosite:
+    - geolocation-cn
