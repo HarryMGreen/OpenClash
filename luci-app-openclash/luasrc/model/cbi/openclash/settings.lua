@@ -284,7 +284,7 @@ o = s:taboption("dns", Flag, "custom_mainonly_filter", translate("Custom MainOnl
 o.description = translate("Requests match these rules will only use main nameserver")
 o.default = 0
 
-custom_mainonly_filter = s:taboption("dns", Value, "custom_mainlonly_fil")
+custom_mainonly_filter = s:taboption("dns", Value, "custom_mainonly_fil")
 custom_mainonly_filter.template = "cbi/tvalue"
 custom_mainonly_filter.rows = 20
 custom_mainonly_filter.wrap = "off"
