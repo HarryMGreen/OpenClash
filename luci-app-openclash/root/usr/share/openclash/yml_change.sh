@@ -58,14 +58,14 @@ if [ "$(ruby_read "$5" "['secret']")" != "$2" ]; then
    uci -q set openclash.config.config_reload=0
 fi
 
-#if [ "$core_type" != "TUN" ] && [ "${10}" == "script" ]; then
-#   rule_mode="rule"
-#   uci -q set openclash.config.proxy_mode="$rule_mode"
-#   uci -q set openclash.config.router_self_proxy="1"
-#   LOG_OUT "Warning: Only TUN Core Support Script Mode, Switch To The Rule Mode!"
-#else
+if [ "$core_type" != "TUN" ] && [ "${10}" == "script" ]; then
+   rule_mode="rule"
+   uci -q set openclash.config.proxy_mode="$rule_mode"
+   uci -q set openclash.config.router_self_proxy="1"
+   LOG_OUT "Warning: Only TUN Core Support Script Mode, Switch To The Rule Mode!"
+else
    rule_mode="${10}"
-#fi
+fi
 
 uci commit openclash
 
