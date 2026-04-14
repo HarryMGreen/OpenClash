@@ -7,7 +7,8 @@ LOG_FILE="/tmp/openclash.log"
 PROXY_FWMARK="0x162"
 PROXY_ROUTE_TABLE="0x162"
 LOGTIME=$(echo $(date "+%Y-%m-%d %H:%M:%S"))
-CONFIG_FILE="/etc/openclash/$(uci -q get openclash.config.config_path |awk -F '/' '{print $5}' 2>/dev/null)"
+# Working copy path matches init.d: /etc/openclash/<basename of config_path>
+CONFIG_FILE="/etc/openclash/$(uci -q get openclash.config.config_path |awk -F '/' '{print $NF}' 2>/dev/null)"
 ipv6_enable=$(uci -q get openclash.config.ipv6_enable)
 enable_redirect_dns=$(uci -q get openclash.config.enable_redirect_dns)
 dns_port=$(uci -q get openclash.config.dns_port)
@@ -112,7 +113,7 @@ do
    enable=$(uci -q get openclash.config.enable)
 
 if [ "$enable" -eq 1 ]; then
-	clash_pids=$(pidof clash |sed 's/$//g' |wc -l)
+	clash_pids=$(pidof clash |sed 's/$//g' |wc -w)
 	if [ "$clash_pids" -gt 1 ]; then
          LOG_OUT "Watchdog: Multiple Clash Processes, Kill All..."
          clash_pids=$(pidof clash |sed 's/$//g')
@@ -125,6 +126,10 @@ if [ "$enable" -eq 1 ]; then
 	   CRASH_NUM=$(expr "$CRASH_NUM" + 1)
 	   if [ "$CRASH_NUM" -le 3 ]; then
          LOG_OUT "Watchdog: Clash Core Problem, Restart..."
+         RAW_CONFIG_FILE=$(uci -q get openclash.config.config_path)
+         CONFIG_BASENAME=$(echo "$RAW_CONFIG_FILE" |awk -F '/' '{print $NF}' 2>/dev/null)
+         [ -n "$CONFIG_BASENAME" ] && CONFIG_FILE="/etc/openclash/$CONFIG_BASENAME"
+         core_type=$(uci -q get openclash.config.core_type)
          touch /tmp/openclash.log 2>/dev/null
          chmod o+w /etc/openclash/proxy_provider/* 2>/dev/null
          chmod o+w /etc/openclash/rule_provider/* 2>/dev/null
