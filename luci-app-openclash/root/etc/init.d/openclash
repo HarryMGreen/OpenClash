@@ -64,7 +64,7 @@ add_cron()
       [ "$(uci -q get openclash.config.auto_restart)" -eq 1 ] && echo "0 $(uci -q get openclash.config.auto_restart_day_time) * * $(uci -q get openclash.config.auto_restart_week_time) /etc/init.d/openclash restart 2>/dev/null" >> $CRON_FILE
    }
    crontab $CRON_FILE
-   nohup /usr/share/openclash/openclash_watchdog.sh &
+   [ "$(unify_ps_status "openclash_watchdog.sh")" -eq 0 ] && nohup /usr/share/openclash/openclash_watchdog.sh &
 }
 
 del_cron()

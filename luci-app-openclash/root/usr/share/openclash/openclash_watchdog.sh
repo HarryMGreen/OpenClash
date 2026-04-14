@@ -1,6 +1,10 @@
 #!/bin/sh
 . /usr/share/openclash/log.sh
 
+mkdir -p /tmp/lock 2>/dev/null
+exec 878>"/tmp/lock/openclash_watchdog.lock" 2>/dev/null
+flock -n 878 2>/dev/null || exit 0
+
 CLASH="/etc/openclash/clash"
 CLASH_CONFIG="/etc/openclash"
 LOG_FILE="/tmp/openclash.log"
